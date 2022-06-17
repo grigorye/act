@@ -15,6 +15,7 @@ import (
 	"testing/fstest"
 
 	"github.com/julienschmidt/httprouter"
+	"github.com/nektos/act/pkg/common"
 	"github.com/nektos/act/pkg/model"
 	"github.com/nektos/act/pkg/runner"
 	log "github.com/sirupsen/logrus"
@@ -241,6 +242,7 @@ type TestJobFileInfo struct {
 }
 
 var aritfactsPath = path.Join(os.TempDir(), "test-artifacts")
+var artifactsIP = common.GetOutboundIP().String()
 var artifactsPort = "12345"
 
 func TestArtifactFlow(t *testing.T) {
@@ -250,7 +252,7 @@ func TestArtifactFlow(t *testing.T) {
 
 	ctx := context.Background()
 
-	cancel := Serve(ctx, aritfactsPath, artifactsPort)
+	cancel := Serve(ctx, aritfactsPath, artifactsIP, artifactsPort)
 	defer cancel()
 
 	platforms := map[string]string{

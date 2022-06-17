@@ -37,6 +37,7 @@ type Input struct {
 	containerCapDrop                   []string
 	autoRemove                         bool
 	artifactServerPath                 string
+	artifactServerIP                   string
 	artifactServerPort                 string
 	jsonLogger                         bool
 	noSkipCheckout                     bool
