@@ -15,6 +15,7 @@ type Input struct {
 	eventPath                          string
 	reuseContainers                    bool
 	bindWorkdir                        bool
+	bindExtras                         []string
 	secrets                            []string
 	envs                               []string
 	platforms                          []string

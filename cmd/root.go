@@ -50,6 +50,7 @@ func Execute(ctx context.Context, version string) {
 	rootCmd.Flags().StringArrayVarP(&input.platforms, "platform", "P", []string{}, "custom image to use per platform (e.g. -P ubuntu-18.04=nektos/act-environments-ubuntu:18.04)")
 	rootCmd.Flags().BoolVarP(&input.reuseContainers, "reuse", "r", false, "don't remove container(s) on successfully completed workflow(s) to maintain state between runs")
 	rootCmd.Flags().BoolVarP(&input.bindWorkdir, "bind", "b", false, "bind working directory to container, rather than copy")
+	rootCmd.Flags().StringArrayVarP(&input.bindExtras, "bind-extras", "B", []string{}, "extra directories to bind into container")
 	rootCmd.Flags().BoolVarP(&input.forcePull, "pull", "p", false, "pull docker image(s) even if already present")
 	rootCmd.Flags().BoolVarP(&input.forceRebuild, "rebuild", "", false, "rebuild local action docker image(s) even if already present")
 	rootCmd.Flags().BoolVarP(&input.autodetectEvent, "detect-event", "", false, "Use first event type from workflow as event that triggered the workflow")
@@ -382,6 +383,7 @@ func newRunCommand(ctx context.Context, input *Input) func(*cobra.Command, []str
 			ReuseContainers:                    input.reuseContainers,
 			Workdir:                            input.Workdir(),
 			BindWorkdir:                        input.bindWorkdir,
+			BindExtras:                         input.bindExtras,
 			LogOutput:                          !input.noOutput,
 			JSONLogger:                         input.jsonLogger,
 			Env:                                envs,

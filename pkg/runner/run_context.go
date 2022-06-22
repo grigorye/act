@@ -106,6 +106,19 @@ func (rc *RunContext) GetBindsAndMounts() ([]string, map[string]string) {
 		}
 	}
 
+	if bindExtras := rc.Config.BindExtras; bindExtras != nil {
+		for _, path := range bindExtras {
+			bindModifiers := ""
+			if runtime.GOOS == "darwin" {
+				bindModifiers = ":delegated"
+			}
+			if selinux.GetEnabled() {
+				bindModifiers = ":z"
+			}
+			binds = append(binds, fmt.Sprintf("%s:%s%s", path, path, bindModifiers))
+		}
+	}
+
 	if rc.Config.BindWorkdir {
 		bindModifiers := ""
 		if runtime.GOOS == "darwin" {
