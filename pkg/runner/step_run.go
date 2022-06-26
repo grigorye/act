@@ -165,7 +165,7 @@ func (sr *stepRun) setupWorkingDirectory(ctx context.Context) {
 	}
 
 	// jobs can receive context values, so we interpolate
-	step.WorkingDirectory = rc.NewExpressionEvaluator(ctx).Interpolate(ctx, step.WorkingDirectory)
+	step.WorkingDirectory = rc.NewEnvExpressionEvaluator(ctx, "working-directory", sr.env).Interpolate(ctx, step.WorkingDirectory)
 
 	// but top level keys in workflow file like `defaults` or `env` can't
 	if step.WorkingDirectory == "" {

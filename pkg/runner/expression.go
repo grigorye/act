@@ -66,7 +66,7 @@ func (rc *RunContext) NewExpressionEvaluator(ctx context.Context) ExpressionEval
 }
 
 // NewExpressionEvaluator creates a new evaluator
-func (rc *RunContext) NewStepExpressionEvaluator(ctx context.Context, step step) ExpressionEvaluator {
+func (rc *RunContext) NewEnvExpressionEvaluator(ctx context.Context, configContext string, env map[string]string) ExpressionEvaluator {
 	// todo: cleanup EvaluationEnvironment creation
 	job := rc.Run.Job()
 	strategy := make(map[string]interface{})
@@ -87,7 +87,7 @@ func (rc *RunContext) NewStepExpressionEvaluator(ctx context.Context, step step)
 
 	ee := &exprparser.EvaluationEnvironment{
 		Github: rc.getGithubContext(ctx),
-		Env:    *step.getEnv(),
+		Env:    env,
 		Job:    rc.getJobContext(),
 		Steps:  rc.getStepsContext(),
 		Runner: map[string]interface{}{
@@ -107,9 +107,13 @@ func (rc *RunContext) NewStepExpressionEvaluator(ctx context.Context, step step)
 		interpreter: exprparser.NewInterpeter(ee, exprparser.Config{
 			Run:        rc.Run,
 			WorkingDir: rc.Config.Workdir,
-			Context:    "step",
+			Context:    configContext,
 		}),
 	}
+}
+
+func (rc *RunContext) NewStepExpressionEvaluator(ctx context.Context, step step) ExpressionEvaluator {
+	return rc.NewEnvExpressionEvaluator(ctx, "step", *step.getEnv())
 }
 
 type expressionEvaluator struct {
